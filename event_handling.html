@@ -1,0 +1,52 @@
+<div id="vm1">
+  <button v-on:click="counter += 1">+1s</button>
+  <p>The elder has been +{{ counter }}s.</p>
+</div>
+<div id="vm2">
+  <button v-on:click="greet">Greet</button>
+</div>
+<div id="vm3">
+  <button v-on:click="say('hi')">Say hi</button>
+  <button v-on:click="say('what')">Say what</button>
+  <button v-on:click="warn('Form cannot be submitted yet.', $event)">
+    Submit
+  </button>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+  var vm1 = new Vue({
+    el: "#vm1",
+    data: {
+      counter: 0
+    }
+  })
+  var vm2 = new Vue({
+    el: "#vm2",
+    data: {
+      name: "Vue"
+    },
+    methods: {
+      greet: function(event) {
+        alert("Hello, " + this.name + "!")
+        if (event) {
+          alert(event.target.tagName)
+        }
+      }
+    }
+  })
+  vm2.greet()
+  var vm3 = new Vue({
+    el: "#vm3",
+    methods: {
+      say: function(message) {
+        alert(message)
+      },
+      warn: function(message, event) {
+        if (event) {
+          alert(event.target.tagName)
+        }
+        alert(message)
+      }
+    }
+  })
+</script>

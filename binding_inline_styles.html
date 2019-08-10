@@ -1,0 +1,48 @@
+<div id="vm1">
+  <p v-bind:style="{color: activeColor, fontSize: fontSize + 'px'}">Hello, Vue!</p>
+</div>
+<div id="vm2">
+  <p v-bind:style="styleObject">Hello, Vue!</p>
+</div>
+<div id="vm3">
+  <p v-bind:style="[baseStyle, overridingStyle]">Hello, Vue!</p>
+</div>
+<div id="vm4">
+  <p v-bind:style="{display: ['-webkit-box', '-ms-flexbox', 'flex']}">Hello, Vue!</p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+  var vm1 = new Vue({
+    el: "#vm1",
+    data: {
+      activeColor: "red",
+      fontSize: 30
+    }
+  })
+  var vm2 = new Vue({
+    el: "#vm2",
+    data: {
+      styleObject: {
+        color: "red",
+        fontSize: "13px"
+      }
+    }
+  })
+  var vm3 = new Vue({
+    el: "#vm3",
+    data: {
+      baseStyle: {
+        color: "gray",
+        fontSize: "20px"
+      },
+      overridingStyle: {
+        "background-color": "powderblue",
+        transform: "rotateY(60deg)",
+        "transform-style": "preserve-3d"
+      }
+    }
+  })
+  var vm4 = new Vue({
+    el: "#vm4"
+  })
+</script>

@@ -1,0 +1,77 @@
+<div id="vm1">
+  <template v-if="awesome">
+    <h1>Vue is awesome!</h1>
+    <p>Now you see me</p>
+  </template>
+  <template v-else>
+    <h1>Oh no!</h1>
+    <p>Now you don't</p>
+  </template>
+</div>
+<div id="vm2">
+  <input v-model="type" placeholder="Enter the type" />
+  <p v-if="type === 'A'">type is A</p>
+  <p v-else-if="type === 'B'">type is B</p>
+  <p v-else-if="type === 'C'">type is C</p>
+  <p v-else>Not A/B/C</p>
+</div>
+<div id="vm3">
+  <template v-if="loginType === 'mobile'">
+    <label>Mobile</label>
+    <input placeholder="Enter your mobile number" key="mobile" /><br/>
+    <label>SMS Verify Code</label>
+    <input placeholder="Enter the SMS verify code" /><br/>
+  </template>
+  <template v-else>
+    <label>Email</label>
+    <input placeholder="Enter your email address" key="email" /><br/>
+    <label>Email Verify Code</label>
+    <input placeholder="Enter the Email verify code" /><br/>
+  </template>
+  <button v-on:click="toggleLoginType">Toggle login type</button>
+</div>
+<div id="vm4">
+  <h1 v-show="show">Hello, Vue!</h1>
+  <button v-on:click="toggle">Toggle</button>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+  var vm1 = new Vue({
+    el: "#vm1",
+    data: {
+      awesome: Math.random() < 0.5
+    }
+  })
+  var vm2 = new Vue({
+    el: "#vm2",
+    data: {
+      type: ""
+    }
+  })
+  var vm3 = new Vue({
+    el: "#vm3",
+    data: {
+      loginType: "mobile"
+    },
+    methods: {
+      toggleLoginType: function() {
+        if (this.loginType === "mobile") {
+          this.loginType = "email"
+        } else {
+          this.loginType = "mobile"
+        }
+      }
+    }
+  })
+  var vm4 = new Vue({
+    el: "#vm4",
+    data: {
+      show: true
+    },
+    methods: {
+      toggle: function() {
+        this.show = !this.show
+      }
+    }
+  })
+</script>

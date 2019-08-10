@@ -1,0 +1,135 @@
+<div id="vm1">
+  <ul>
+    <li v-for="item in items">{{ item.message }}</li>
+  </ul>
+  <ul>
+    <template v-for="item in items">
+      <li>{{ item.message }}</li>
+      <li class="divider" role="presentation"></li>
+    </template>
+  </ul>
+</div>
+<ul id="vm2">
+  <li v-for="(item, index) in items">
+    {{ parentMessage }} - {{ index }} - {{ item.message }}
+  </li>
+</ul>
+<div id="vm3">
+  <ul>
+    <li v-for="value in object">{{ value }}</li>
+  </ul>
+  <div v-for="(value, key) in object">
+    {{ key }}: {{ value }}
+  </div>
+  <div v-for="(value, key, index) in object">
+    {{ index }}. {{ key }}: {{ value }}
+  </div>
+</div>
+<div id="vm4">
+  <span v-for="n in 10">{{ n }} </span>
+</div>
+<ul id="vm5">
+  <li v-for="todo in todos" v-if="!todo.isComplete">
+    {{ todo.content }}
+  </li>
+</ul>
+<div id="vm6">
+  <form v-on:submit.prevent="addNewTodo">
+    <label for="new-todo">Add a todo</label>
+    <input
+      id="new-todo"
+      placeholder="E.g. Feed the cat"
+      v-model="newTodoText"
+    />
+    <button>Add</button>
+  </form>
+  <ul>
+    <li
+      is="todo-item"
+      v-for="(todo, index) in todos"
+      v-bind:key="todo.id"
+      v-bind:title="todo.title"
+      v-on:remove="todos.splice(index, 1)"
+    ></li>
+  </ul>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+  var vm1 = new Vue({
+    el: "#vm1",
+    data: {
+      items: [
+        {message: "Foo"},
+        {message: "Bar"}
+      ]
+    }
+  })
+  var vm2 = new Vue({
+    el: "#vm2",
+    data: {
+      parentMessage: "Parent",
+      items: [
+        {message: "Foo"},
+        {message: "Bar"}
+      ]
+    }
+  })
+  var vm3 = new Vue({
+    el: "#vm3",
+    data: {
+      object: {
+        title: "How to do lists in Vue",
+        author: "Jane Doe",
+        publishedAt: "2016-04-10"
+      }
+    }
+  })
+  var vm4 = new Vue({
+    el: "#vm4"
+  })
+  var vm5 = new Vue({
+    el: "#vm5",
+    data: {
+      todos: [
+        {content: "Foo", isComplete: false},
+        {content: "Bar", isComplete: true},
+        {content: "Baz", isComplete: false}
+      ]
+    }
+  })
+  Vue.component("todo-item", {
+    props: ["title"],
+    template: "\
+      <li>\
+        {{ title }}\
+        <button v-on:click=\"$emit('remove')\">Remove</button>\
+      </li>\
+    "
+  })
+  var vm6 = new Vue({
+    el: "#vm6",
+    data: {
+      newTodoText: "",
+      todos: [{
+        id: 1,
+        title: "Do the dishes"
+      }, {
+        id: 2,
+        title: "Take out the trash"
+      }, {
+        id: 3,
+        title: "Mow the lawn"
+      }],
+      nextTodoId: 4
+    },
+    methods: {
+      addNewTodo: function() {
+        this.todos.push({
+          id: this.nextTodoId++,
+          title: this.newTodoText
+        })
+        this.newTodoText = ""
+      }
+    }
+  })
+</script>

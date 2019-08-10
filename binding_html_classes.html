@@ -1,0 +1,88 @@
+<div id="vm1">
+  <div v-bind:class="{active: isActive}"></div>
+</div>
+<div id="vm2">
+  <div
+    class="static"
+    v-bind:class="{active: isActive, 'text-danger': hasError}"
+  ></div>
+</div>
+<div id="vm3">
+  <div v-bind:class="classObject"></div>
+</div>
+<div id="vm4">
+  <div v-bind:class="classObject"></div>
+</div>
+<div id="vm5">
+  <div v-bind:class="[activeClass, errorClass]"></div>
+</div>
+<div id="vm6">
+  <div v-bind:class="[{active: isActive}, errorClass]"></div>
+</div>
+<div id="vm7">
+  <my-component class="baz boo"></my-component>
+  <my-component v-bind:class="{active: isActive}"></my-component>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+  var vm1 = new Vue({
+    el: "#vm1",
+    data: {
+      isActive: true
+    }
+  })
+  var vm2 = new Vue({
+    el: "#vm2",
+    data: {
+      isActive: true,
+      hasError: true
+    }
+  })
+  var vm3 = new Vue({
+    el: "#vm3",
+    data: {
+      classObject: {
+        active: true,
+        "text-danger": true
+      }
+    }
+  })
+  var vm4 = new Vue({
+    el: "#vm4",
+    data: {
+      isActive: true,
+      error: null
+    },
+    computed: {
+      classObject: function() {
+        return {
+          active: this.isActive && !this.error,
+          "text-danger": this.error && this.error.type === "fatal"
+        }
+      }
+    }
+  })
+  var vm5 = new Vue({
+    el: "#vm5",
+    data: {
+      activeClass: "active",
+      errorClass: "text-danger"
+    }
+  })
+  var vm6 = new Vue({
+    el: "#vm6",
+    data: {
+      isActive: true,
+      errorClass: "text-danger"
+    }
+  })
+  Vue.component("my-component", {
+    template: "<p class=\"foo bar\">Hello, Vue!</p>"
+  })
+  var vm7 = new Vue({
+    el: "#vm7",
+    data: {
+      isActive: true
+    }
+  })
+</script>

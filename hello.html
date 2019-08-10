@@ -1,0 +1,98 @@
+<div id="vm1">
+  {{ message }}
+</div>
+<div id="vm2">
+  <span v-bind:title="message">
+    Hover your mouse over me for a few seconds to see my dynamically bound 
+    title!
+  </span>
+</div>
+<div id="vm3">
+  <span v-if="seen">Now you see me</span>
+</div>
+<div id="vm4">
+  <ol>
+    <li v-for="todo in todos">
+      {{ todo.text }}
+    </li>
+  </ol>
+</div>
+<div id="vm5">
+  <p>{{ message }}</p>
+  <button v-on:click="reverseMessage">Reverse Message</button>
+</div>
+<div id="vm6">
+  <p>{{ message }}</p>
+  <input v-model="message" />
+</div>
+<div id="vm7">
+  <ol>
+    <todo-item
+      v-for="item in groceryList"
+      v-bind:todo="item"
+      v-bind:key="item.id"
+    ></todo-item>
+  </ol>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+  var vm1 = new Vue({
+    el: "#vm1",
+    data: {
+      message: "Hello, Vue!"
+    }
+  })
+  var vm2 = new Vue({
+    el: "#vm2",
+    data: {
+      message: "You loaded this page on " + new Date().toLocaleString()
+    }
+  })
+  var vm3 = new Vue({
+    el: "#vm3",
+    data: {
+      seen: true
+    }
+  })
+  var vm4 = new Vue({
+    el: "#vm4",
+    data: {
+      todos: [
+        {text: "Learn JavaScript"},
+        {text: "Learn Vue"},
+        {text: "Build something awesome"}
+      ]
+    }
+  })
+  var vm5 = new Vue({
+    el: "#vm5",
+    data: {
+      message: "Hello, Vue!"
+    },
+    methods: {
+      reverseMessage: function() {
+        this.message = this.message.split("").reverse().join("")
+      }
+    }
+  })
+  var vm6 = new Vue({
+    el: "#vm6",
+    data: {
+      message: "Hello, Vue!"
+    }
+  })
+  Vue.component("todo-item", {
+    props: ["todo"],
+    template: "<li>{{ todo.text }}</li>"
+  })
+  var vm7 = new Vue({
+    el: "#vm7",
+    data: {
+      groceryList: [
+        {id: 0, text: "Vegetables"},
+        {id: 1, text: "Cheese" },
+        {id: 2, text: "Whatever else humans are supposed to eat"}
+      ]
+    }
+  })
+</script>

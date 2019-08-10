@@ -1,0 +1,94 @@
+<div id="vm1">
+  <button-counter></button-counter>
+  <button-counter></button-counter>
+  <button-counter></button-counter>
+</div>
+<div id="vm2">
+  <div v-bind:style="{fontSize: postFontSize + 'em'}">
+    <blog-post
+      v-for="post in posts"
+      v-bind:key="post.id"
+      v-bind:post="post"
+      v-on:enlarge-text="onEnlargeText"
+    ></blog-post>
+  </div>
+</div>
+<div id="vm3">
+  <upper-input v-model="message"></upper-input>
+  <p>{{ message }}</p>
+</div>
+<div id="vm4">
+  <alert-box>Something bad happened.</alert-box>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+  Vue.component("button-counter", {
+    data: function() {
+      return {
+        count: 0
+      }
+    },
+    template: "\
+      <button v-on:click=\"++count\">\
+        You clicked me {{ count }} times.\
+      </button>\
+    "
+  })
+  var vm1 = new Vue({
+    el: "#vm1"
+  })
+  Vue.component("blog-post", {
+    props: ["post"],
+    template: "\
+      <div class=\"blog-post\">\
+        <h3>{{ post.title }}</h3>\
+        <button v-on:click=\"$emit('enlarge-text', 0.1)\">\
+          Enlarge text\
+        </button>\
+        <div v-html=\"post.content\"></div>\
+      </div>\
+    "
+  })
+  var vm2 = new Vue({
+    el: "#vm2",
+    data: {
+      posts: [
+        {id: 1, title: "My journey with Vue", content: "<p>content of \"My journey with Vue\".</p>"},
+        {id: 2, title: "Blogging with Vue", content: "<p>content of \"Blogging with Vue\".</p>"},
+        {id: 3, title: "Why Vue is so fun", content: "<p>content of \"Why Vue is so fun\".</p>"},
+      ],
+      postFontSize: 1
+    },
+    methods: {
+      onEnlargeText: function(amount) {
+        this.postFontSize += amount
+      }
+    }
+  })
+  Vue.component("upper-input", {
+    props: ["value"],
+    template: "\
+      <input\
+        v-bind:value=\"value\"\
+        v-on:input=\"$emit('input', $event.target.value.toUpperCase())\"\
+      />\
+    "
+  })
+  var vm3 = new Vue({
+    el: "#vm3",
+    data: {
+      message: ""
+    }
+  })
+  Vue.component("alert-box", {
+    template: "\
+      <div style=\"background-color: red;\">\
+        <strong>Error!</strong>\
+        <slot></slot>\
+      </div>\
+    "
+  })
+  var vm4 = new Vue({
+    el: "#vm4"
+  })
+</script>
