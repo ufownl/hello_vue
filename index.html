@@ -1,0 +1,27 @@
+<h1>Hello, Vue!</h1>
+<ol id="hello-vue">
+  <li v-for="item in list">
+    <a v-bind:href="item.path">{{ item.title }}</a>
+  </li>
+</ol>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+  var hello_vue = new Vue({
+    el: "#hello-vue",
+    data: {
+      list: [
+        {title: "Introduction", path: "./hello.html"},
+        {title: "Computed Properties", path: "./computed_properties.html"},
+        {title: "Watchers", path: "./watchers.html"},
+        {title: "Class Bindings", path: "./binding_html_classes.html"},
+        {title: "Style Bindings", path: "./binding_inline_styles.html"},
+        {title: "Conditional Rendering", path: "./conditional_rendering.html"},
+        {title: "List Rendering", path: "./list_rendering.html"},
+        {title: "Event Handling", path: "./event_handling.html"},
+        {title: "Form Input Bindings", path: "./form_input_bindings.html"},
+        {title: "Components Basics", path: "./components_basics.html"},
+        {title: "Transitions & Animation", path: "./transitions_and_animations.html"}
+      ]
+    }
+  })
+</script>
