@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      .fade-enter-active, .fade-leave-active {
+        transition: opacity 0.5s;
+      }
+      .fade-enter, .fade-leave-to {
+        opacity: 0;
+      }
+      .slide-fade-enter-active {
+        transition: all 0.3s ease;
+      }
+      .slide-fade-leave-active {
+        transition: all 0.8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+      }
+      .slide-fade-enter, .slide-fade-leave-to {
+        transform: translateX(10px);
+        opacity: 0;
+      }
+      .bounce-enter-active {
+        animation: bounce-in 0.5s;
+      }
+      .bounce-leave-active {
+        animation: bounce-in 0.5s reverse;
+      }
+      @keyframes bounce-in {
+        0% {
+          transform: scale(0);
+        }
+        50% {
+          transform: scale(1.5);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      .list-item {
+        display: inline-block;
+        margin-right: 10px;
+      }
+      .flip-list-move {
+        transition: transform 1s;
+      }
+      .list-item-completed {
+        transition: all 1s;
+      }
+    </style>
+    <link href="https://cdn.jsdelivr.net/npm/animate.css@3.5.1" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <div id="vm1">
+      <button v-on:click="show = !show">Toggle</button>
+      <transition name="fade">
+        <p v-if="show">Hello, Vue!</p>
+      </transition>
+      <transition name="slide-fade" appear>
+        <p v-if="show">Hello, Vue!</p>
+      </transition>
+      <transition name="bounce">
+        <p v-if="show" style="transform-origin: left center;">
+          Hello, Vue!
+        </p>
+      </transition>
+      <transition
+        name="custom-classes"
+        enter-active-class="animated tada"
+        leave-active-class="animated bounceOutRight"
+        appear
+      >
+        <p v-if="show">Hello, Vue!</p>
+      </transition>
+    </div>
+    <div id="vm2">
+      <button v-on:click="show = !show">Toggle</button><br/>
+      <transition
+        v-on:before-enter="beforeEnter"
+        v-on:enter="enter"
+        v-on:leave="leave"
+        v-bind:css="false"
+      >
+        <p v-if="show" style="transform-origin: left center;">
+          Hello, Vue!
+        </p>
+      </transition>
+    </div>
+    <div id="vm3">
+      <transition name="fade" v-bind:mode="transitionMode">
+        <button v-on:click="onClick" v-bind:key="isOn">
+          {{ buttonMessage }}
+        </button>
+      </transition>
+    </div>
+    <div id="vm4">
+      <input type="radio" id="alpha" value="v-a" v-model="view" />
+      <label for="alpha">A</label>
+      <input type="radio" id="beta" value="v-b" v-model="view" />
+      <label for="beta">B</label>
+      <transition name="fade" mode="out-in">
+        <component v-bind:is="view"></component>
+      </transition>
+    </div>
+    <div id="vm5">
+      <button v-on:click="add">Add</button>
+      <button v-on:click="remove">Remove</button>
+      <button v-on:click="shuffle">Shuffle</button>
+      <transition-group name="bounce" tag="p">
+        <span v-for="item in items" v-bind:key="item" class="list-item">
+          {{ item }}
+        </span>
+      </transition-group>
+      <transition-group name="flip-list" tag="ul">
+        <li v-for="item in items" v-bind:key="item">{{ item }}</li>
+      </transition-group>
+      <transition-group name="slide-fade" tag="ul">
+        <li
+          v-for="item in items"
+          v-bind:key="item"
+          class="list-item-completed"
+        >
+          {{ item }}
+        </li>
+      </transition-group>
+    </div>
+    <div id="vm6">
+      <input v-model="query" />
+      <transition-group
+        tag="ul"
+        appear
+        v-bind:css="false"
+        v-on:before-enter="beforeEnter"
+        v-on:enter="enter"
+        v-on:leave="leave"
+      >
+        <li
+          v-for="(item, index) in filteredList"
+          v-bind:key="item.msg"
+          v-bind:data-index="index"
+        >
+          {{ item.msg }}
+        </li>
+      </transition-group>
+    </div>
+    <div id="vm7">
+      <span>Fade In: </span>
+      <input
+        type="range"
+        v-model="fadeInDuration"
+        min="0"
+        v-bind:max="maxFadeDuration"
+      />
+      <span>Fade Out: </span>
+      <input
+        type="range"
+        v-model="fadeOutDuration"
+        min="0"
+        v-bind:max="maxFadeDuration"
+      />
+      <transition
+        appear
+        v-bind:css="false"
+        v-on:before-enter="beforeEnter"
+        v-on:enter="enter"
+        v-on:leave="leave"
+      >
+        <p v-if="show">Hello, Vue!</p>
+      </transition>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.14.1/lodash.min.js"></script>
+    <script>
+      var vm1 = new Vue({
+        el: "#vm1",
+        data: {
+          show: true
+        }
+      })
+      var vm2 = new Vue({
+        el: "#vm2",
+        data: {
+          show: false
+        },
+        methods: {
+          beforeEnter: function(el) {
+            el.style.opacity = 0
+          },
+          enter: function(el, done) {
+            Velocity(el, {
+              opacity: 1,
+              fontSize: "1.4em"
+            }, {
+              duration: 300
+            })
+            Velocity(el, {
+              fontSize: "1em"
+            }, {
+              complete: done
+            })
+          },
+          leave: function(el, done) {
+            Velocity(el, {
+              translateX: "15px",
+              rotateZ: "50deg"
+            }, {
+              duration: 600
+            })
+            Velocity(el, {
+              rotateZ: "100deg"
+            }, {
+              loop: 2
+            })
+            Velocity(el, {
+              rotateZ: "45deg",
+              translateY: "30px",
+              translateX: "30px",
+              opacity: 0
+            }, {
+              complete: done
+            })
+          }
+        }
+      })
+      var vm3 = new Vue({
+        el: "#vm3",
+        data: {
+          isOn: true,
+          isOutIn: true,
+          counter: 0
+        },
+        computed: {
+          buttonMessage: function() {
+            if (this.isOn) {
+              return "off"
+            } else {
+              return "on"
+            }
+          },
+          transitionMode: function() {
+            if (this.isOutIn) {
+              return "out-in"
+            } else {
+              return "in-out"
+            }
+          }
+        },
+        methods: {
+          onClick: function(event) {
+            this.isOn = !this.isOn
+            if (++this.counter % 2 === 0) {
+              this.isOutIn = !this.isOutIn
+            }
+          }
+        }
+      })
+      var vm4 = new Vue({
+        el: "#vm4",
+        data: {
+          view: "v-a"
+        },
+        components: {
+          "v-a": {
+            template: "<div>Component A</div>"
+          },
+          "v-b": {
+            template: "<div>Component B</div>"
+          }
+        }
+      })
+      var vm5 = new Vue({
+        el: "#vm5",
+        data: {
+          items: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+          nextNum: 10
+        },
+        methods: {
+          randomIndex: function() {
+            return Math.floor(Math.random() * this.items.length)
+          },
+          add: function() {
+            this.items.splice(this.randomIndex(), 0, this.nextNum++)
+          },
+          remove: function() {
+            this.items.splice(this.randomIndex(), 1)
+          },
+          shuffle: function() {
+            this.items = _.shuffle(this.items)
+          }
+        }
+      })
+      var vm6 = new Vue({
+        el: "#vm6",
+        data: {
+          query: "",
+          list: [
+            {msg: "Bruce Lee"},
+            {msg: "Jackie Chan"},
+            {msg: "Chuck Norris"},
+            {msg: "Jet Li"},
+            {msg: "Kung Fury"}
+          ]
+        },
+        computed: {
+          filteredList: function() {
+            let vm = this
+            return this.list.filter(function(item) {
+              return item.msg.toLowerCase().indexOf(vm.query.toLowerCase()) !== -1
+            })
+          }
+        },
+        methods: {
+          beforeEnter: function(el) {
+            el.style.opacity = 0
+            el.style.height = 0
+          },
+          enter: function(el, done) {
+            let delay = el.dataset.index * 150
+            setTimeout(function() {
+              Velocity(el, {
+                opacity: 1,
+                height: "1.6em"
+              }, {
+                complete: done
+              })
+            }, delay)
+          },
+          leave: function(el, done) {
+            let delay = el.dataset.index * 150
+            setTimeout(function() {
+              Velocity(el, {
+                opacity: 0,
+                height: 0
+              }, {
+                complete: done
+              })
+            }, delay)
+          }
+        }
+      })
+      var vm7 = new Vue({
+        el: "#vm7",
+        data: {
+          show: true,
+          fadeInDuration: 1000,
+          fadeOutDuration: 1000,
+          maxFadeDuration: 1500
+        },
+        methods: {
+          beforeEnter: function(el) {
+            el.style.opacity = 0
+          },
+          enter: function(el, done) {
+            let vm = this
+            Velocity(el, {
+              opacity: 1
+            }, {
+              duration: vm.fadeInDuration,
+              complete: function() {
+                done()
+                vm.show = false
+              }
+            })
+          },
+          leave: function(el, done) {
+            let vm = this
+            Velocity(el, {
+              opacity: 0
+            }, {
+              duration: vm.fadeOutDuration,
+              complete: function() {
+                done()
+                vm.show = true
+              }
+            })
+          }
+        }
+      })
+    </script>
+  </body>
+</html>
