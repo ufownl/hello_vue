@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      .pin-demo {
+        height: 100vh;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="vm1">
+      <input v-focus />
+      <p v-reverse>Hello, Vue!</p>
+    </div>
+    <div id="vm2" v-demo:foo.a.b="message"></div>
+    <div id="vm3" class="pin-demo">
+      <h3>Scroll down inside this section ↓</h3>
+      <p v-pin="500">Hello, Vue!</p>
+      <p v-pin:left="500">Hello, Vue!</p>
+      <p v-pin:[direction]="300">Hello, Vue!</p>
+    </div>
+    <div id="vm4"
+      v-demo="{color: 'green', text: 'Hello, Vue!'}"
+      v-color-swatch="'yellow'"
+    >
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+      Vue.directive("focus", {
+        inserted: function(el) {
+          el.focus()
+        }
+      })
+      var vm1 = new Vue({
+        el: "#vm1",
+        directives: {
+          reverse: {
+            inserted: function(el) {
+              el.innerHTML = el.innerHTML.split("").reverse().join("")
+            }
+          }
+        }
+      })
+      Vue.directive("demo", {
+        bind: function(el, binding, vnode) {
+          el.innerHTML =
+            "name: " + JSON.stringify(binding.name) + "<br/>" +
+            "value: " + JSON.stringify(binding.value) + "<br/>" +
+            "expression: " + JSON.stringify(binding.expression) + "<br/>" +
+            "argument: " + JSON.stringify(binding.arg) + "<br/>" +
+            "modifiers: " + JSON.stringify(binding.modifiers) + "<br/>" +
+            "vnode keys: " + Object.keys(vnode).join(", ")
+        }
+      })
+      var vm2 = new Vue({
+        el: "#vm2",
+        data: {
+          message: "Hello, Vue!"
+        }
+      })
+      Vue.directive("pin", {
+        bind: function(el, binding, vnode) {
+          el.style.position = "fixed"
+          let direction = (binding.arg == "left" ? "left" : "top")
+          el.style[direction] = binding.value + "px"
+        }
+      })
+      var vm3 = new Vue({
+        el: "#vm3",
+        data: {
+          direction: "left"
+        }
+      })
+      Vue.directive("color-swatch", function(el, binding) {
+        el.style.backgroundColor = binding.value
+      })
+      var vm4 = new Vue({
+        el: "#vm4"
+      })
+    </script>
+  </body>
+</html>
