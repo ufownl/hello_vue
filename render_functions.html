@@ -1,0 +1,176 @@
+<div id="vm1">
+  <anchored-heading
+    v-for="i in 6"
+    v-bind:level="i"
+    v-bind:name="'heading' + i"
+    v-bind:key="'heading' + i">
+    Hello, Vue!
+  </anchored-heading>
+</div>
+<div id="vm2">
+  <unordered-list v-bind:items="items"></unordered-list>
+  <unordered-list v-bind:items="[]"></unordered-list>
+  <unordered-list></unordered-list>
+</div>
+<div id="vm3">
+  <upper-input v-model="message"></upper-input>
+</div>
+<div id="vm4">
+  <p>
+    <current-user>
+      <template v-slot:default="slotProps">
+        {{ slotProps.user.firstName }}
+      </template>
+    </current-user>
+    <current-user></current-user>
+  </p>
+  <p>
+    <current-user-full></current-user-full>
+  </p>
+  <p>
+    <current-user-smart
+      v-bind:items="['firstName', 'lastName']"
+    ></current-user-smart><br/>
+    <current-user-smart
+      v-bind:items="['lastName', 'firstName']"
+    ></current-user-smart><br/>
+    <current-user-smart
+      v-bind:items="['firstName']"
+    ></current-user-smart><br/>
+    <current-user-smart
+      v-bind:items="['test', 'lastName']"
+    ></current-user-smart><br/>
+    <current-user-smart
+      v-bind:items="['firstName', 'lastName', 'firstName', 'lastName']"
+    ></current-user-smart><br/>
+    <current-user-smart></current-user-smart><br/>
+    <current-user-smart
+      v-bind:items="['firstName', 'lastName']"
+    >Hello, Vue!</current-user-smart>
+  </p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+  Vue.component("anchored-heading", {
+    render: function(createElement) {
+      return createElement("h" + this.level, {
+        style: {
+          height: "30vh"
+        }
+      }, [
+        createElement("a", {
+          attrs: {
+            name: this.name,
+            href: "#" + this.name
+          }
+        }, this.$slots.default)
+      ])
+    },
+    props: {
+      level: {
+        type: Number,
+        required: true
+      },
+      name: {
+        type: String,
+        required: true
+      }
+    }
+  })
+  var vm1 = new Vue({
+    el: "#vm1"
+  })
+  Vue.component("unordered-list", {
+    props: ["items"],
+    render: function(createElement) {
+      if (this.items && this.items.length > 0) {
+        return createElement("ul", this.items.map(function(item) {
+          return createElement("li", item)
+        }))
+      } else {
+        return createElement("p", "No items found.")
+      }
+    }
+  })
+  var vm2 = new Vue({
+    el: "#vm2",
+    data: {
+      items: ["alpha", "beta", "omega"]
+    }
+  })
+  Vue.component("upper-input", {
+    props: ["value"],
+    render: function(createElement) {
+      let self = this
+      return createElement("input", {
+        domProps: {
+          value: self.value
+        },
+        on: {
+          input: function(event) {
+            self.$emit("input", event.target.value.toUpperCase())
+          }
+        }
+      })
+    }
+  })
+  var vm3 = new Vue({
+    el: "#vm3",
+    data: {
+      message: ""
+    }
+  })
+  Vue.component("current-user", {
+    render: function(createElement) {
+      let slot = this.$scopedSlots.default || ((props) => {
+        return props.user.lastName
+      });
+      return createElement("span", slot({user: this.$root.user}))
+    }
+  })
+  Vue.component("current-user-full", {
+    render: function(createElement) {
+      return createElement("current-user", {
+        scopedSlots: {
+          default: function(props) {
+            return props.user.firstName + " " + props.user.lastName
+          }
+        }
+      })
+    }
+  })
+  Vue.component("current-user-smart", {
+    functional: true,
+    props: {
+      items: Array
+    },
+    render: function(createElement, context) {
+      let slot = context.slots().default
+      if (slot) {
+        return slot
+      }
+      let items = context.props.items
+      if (!items) {
+        items = []
+      }
+      return createElement("current-user", {
+        scopedSlots: {
+          default: function(props) {
+            return items.map(function(item) {
+              return props.user[item]
+            }).join(" ")
+          }
+        }
+      })
+    }
+  })
+  var vm4 = new Vue({
+    el: "#vm4",
+    data: {
+      user: {
+        firstName: "Arthas",
+        lastName: "Menethil"
+      }
+    }
+  })
+</script>
