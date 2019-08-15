@@ -1,0 +1,48 @@
+<div id="vm1">
+  <input v-model="value" />
+  <p>{{ value }}</p>
+  <p>{{ value | capitalize }}</p>
+  <p>{{ value | reverse }}</p>
+  <p>{{ value | duplicate }}</p>
+  <p>{{ value | duplicate(3) }}</p>
+  <p>{{ value | reverse | capitalize | duplicate(3) }}</p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+  Vue.filter("capitalize", function(value) {
+    if (!value) {
+      return ""
+    }
+    value = value.toString()
+    return value.charAt(0).toUpperCase() + value.slice(1)
+  })
+  Vue.filter("reverse", function(value) {
+    if (!value) {
+      return ""
+    }
+    value = value.toString()
+    return value.split("").reverse().join("")
+  })
+  var vm1 = new Vue({
+    el: "#vm1",
+    data: {
+      value: ""
+    },
+    filters: {
+      duplicate: function(value, count) {
+        if (!value) {
+          return ""
+        }
+        if (!count) {
+          count = 2
+        }
+        value = value.toString()
+        let result = value
+        for (let i = 1; i < count; ++i) {
+          result += value
+        }
+        return result
+      }
+    }
+  })
+</script>
