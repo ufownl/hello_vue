@@ -1,0 +1,46 @@
+<div id="app">
+  <input v-model="textId" placeholder="Enter the ID" />
+  <p>
+    <router-link v-bind:to="{name: 'foo', params: {id: id}}">
+      Go to Foo
+    </router-link>
+    <router-link v-bind:to="{name: 'foo', params: {id: id}}">
+      Go to Bar
+    </router-link>
+  </p>
+  <router-view></router-view>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue-router/dist/vue-router.js"></script>
+<script>
+  var app = new Vue({
+    el: "#app",
+    data: {
+      textId: ""
+    },
+    computed: {
+      id: function() {
+        let num = parseInt(this.textId)
+        if (num !== num) {
+          num = 0
+        }
+        return num
+      }
+    },
+    router: new VueRouter({
+      routes: [{
+        path: "/foo/:id",
+        name: "foo",
+        component: {
+          template: "<div>Foo {{ $route.params.id }}</div>"
+        }
+      }, {
+        path: "/bar/:id",
+        name: "bar",
+        component: {
+          template: "<div>Bar {{ $route.params.id }}</div>"
+        }
+      }]
+    })
+  })
+</script>
