@@ -1,0 +1,47 @@
+<div id="app">
+  <ul>
+    <li v-for="user in users">
+      <router-link v-bind:to="'/user/' + user">{{ user }}</router-link>
+    </li>
+  </ul>
+  <router-view></router-view>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue-router/dist/vue-router.js"></script>
+<script>
+  var app = new Vue({
+    el: "#app",
+    data: {
+      users: ["alpha", "beta", "theta"]
+    },
+    router: new VueRouter({
+      routes: [{
+        path: "/user/:id",
+        component: {
+          template: "\
+            <div class=\"user\">\
+              <h2>User {{ $route.params.id }}</h2>\
+              <router-view></router-view>\
+              <router-view name=\"profile\"></router-view>\
+              <router-view name=\"posts\"></router-view>\
+            </div>\
+          "
+        },
+        children: [{
+          path: "",
+          components: {
+            default: {
+              template: "<p>Home</p>"
+            },
+            profile: {
+              template: "<p>Profile</p>"
+            },
+            posts: {
+              template: "<p>Posts</p>"
+            }
+          }
+        }]
+      }]
+    })
+  })
+</script>
