@@ -1,0 +1,38 @@
+<div id="app">
+  <h1>Route Props</h1>
+  <ul>
+    <li><router-link to="/">/</router-link></li>
+    <li><router-link to="/echo/hey">/echo/hey</router-link></li>
+    <li><router-link to="/static">/static</router-link></li>
+    <li><router-link to="/dynamic/hi">/dynamic/hi</router-link></li>
+  </ul>
+  <router-view></router-view>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue-router/dist/vue-router.js"></script>
+<script>
+  var Echo = {
+    props: ["content"],
+    template: "<div>Echo: {{ content }}</div>"
+  }
+  var app = new Vue({
+    el: "#app",
+    router: new VueRouter({
+      routes: [
+        {path: "/", component: Echo},
+        {path: "/echo/:content", component: Echo, props: true},
+        {path: "/static", component: Echo, props: {content: "Hello, Vue!"}},
+        {
+          path: "/dynamic/:foo",
+          component: Echo,
+          props: route => {
+            let now = new Date()
+            return {
+              content: route.params.foo + " [" + now + "]"
+            }
+          }
+        }
+      ]
+    })
+  })
+</script>
