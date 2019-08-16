@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      .fade-enter-active, .fade-leave-active {
+        transition: opacity 0.5s;
+      }
+      .fade-enter, .fade-leave-to {
+        opacity: 0;
+      }
+      .slide-left-enter-active, .slide-right-enter-active {
+        transition: all 0.3s ease;
+      }
+      .slide-left-leave-active, .slide-right-leave-active {
+        transition: all 0.8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+      }
+      .slide-left-enter, .slide-left-leave-to {
+        transform: translateX(20px);
+        opacity: 0;
+      }
+      .slide-right-enter, .slide-right-leave-to {
+        transform: translateX(-20px);
+        opacity: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <h1>Transitions</h1>
+      <ul>
+        <li><router-link to="/">/</router-link></li>
+        <li><router-link to="/parent">/parent</router-link></li>
+        <li><router-link to="/parent/foo">/parent/foo</router-link></li>
+        <li><router-link to="/parent/bar">/parent/bar</router-link></li>
+      </ul>
+      <transition name="fade" mode="out-in">
+        <router-view></router-view>
+      </transition>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-router/dist/vue-router.js"></script>
+    <script>
+      var app = new Vue({
+        el: "#app",
+        router: new VueRouter({
+          routes: [{
+            path: "/",
+            component: {
+              template: "<div><h2>Home</h2><p>Hello, Vue!</p></div>"
+            }
+          }, {
+            path: "/parent",
+            component: {
+              data: function() {
+                return {
+                  transitionName: "slide-left"
+                }
+              },
+              beforeRouteUpdate: function(to, from, next) {
+                let toDepth = to.path.split("/").length
+                let fromDepth = from.path.split("/").length
+                this.transitionName =
+                  toDepth < fromDepth ? "slide-right" : "slide-left"
+                next()
+              },
+              template: "\
+                <div>\
+                  <h2>Parent</h2>\
+                  <transition v-bind:name=\"transitionName\" mode=\"out-in\">\
+                    <router-view></router-view>\
+                  </transition>\
+                </div>\
+              "
+            },
+            children: [{
+              path: "",
+              component: {
+                template: "<div>Default</div>"
+              }
+            }, {
+              path: "foo",
+              component: {
+                template: "<div>Foo</div>"
+              }
+            }, {
+              path: "bar",
+              component: {
+                template: "<div>Bar</div>"
+              }
+            }]
+          }]
+        })
+      })
+    </script>
+  </body>
+</html>
