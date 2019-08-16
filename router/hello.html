@@ -1,0 +1,28 @@
+<div id="app">
+  <h1>Hello, Vue Router!</h1>
+  <p>
+    <router-link to="/foo">Go to Foo</router-link>
+    <router-link to="/bar">Go to Bar</router-link>
+  </p>
+  <router-view></router-view>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue-router/dist/vue-router.js"></script>
+<script>
+  var app = new Vue({
+    el: "#app",
+    router: new VueRouter({
+      routes: [{
+        path: "/foo",
+        component: {
+          template: "<div>Foo</div>"
+        }
+      }, {
+        path: "/bar",
+        component: {
+          template: "<div>Bar</div>"
+        }
+      }]
+    })
+  })
+</script>

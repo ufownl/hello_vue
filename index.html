@@ -4,6 +4,12 @@
     <a v-bind:href="item.path">{{ item.title }}</a>
   </li>
 </ol>
+<h1>Hello, Vue Router!</h1>
+<ol id="hello-vue-router">
+  <li v-for="item in list">
+    <a v-bind:href="item.path">{{ item.title }}</a>
+  </li>
+</ol>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script>
   var hello_vue = new Vue({
@@ -24,6 +30,14 @@
         {title: "Custom Directives", path: "./custom_directives.html"},
         {title: "Render Functions & JSX", path: "./render_functions.html"},
         {title: "Filters", path: "./filters.html"}
+      ]
+    }
+  })
+  var hello_vue_router = new Vue({
+    el: "#hello-vue-router",
+    data: {
+      list: [
+        {title: "Getting Started", path: "./router/hello.html"},
       ]
     }
   })
