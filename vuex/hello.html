@@ -1,0 +1,83 @@
+<div id="app">
+  <p>{{ count }}</p>
+  <p>{{ squareCount }}</p>
+  <p>{{ doubleSquareCount }}</p>
+  <p>{{ $store.getters.divide(2) }}</p>
+  <p>
+    <button v-on:click="increment">+</button>
+    <button v-on:click="decrement">-</button>
+    <button v-on:click="incrementAsync">+ async</button>
+  </p>
+  <p>
+    <input v-model="value" type="number" />
+    <button v-on:click="$store.commit('reset', {value: value})">Reset</button>
+  </p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vuex/dist/vuex.js"></script>
+<script>
+  var app = new Vue({
+    el: "#app",
+    store: new Vuex.Store({
+      state: {
+        count: 0
+      },
+      getters: {
+        squareCount: function(state) {
+          return state.count * state.count
+        },
+        doubleSquareCount: function(state, getters) {
+          return getters.squareCount * 2
+        },
+        divide: function(state) {
+          return function(divisor) {
+            return state.count / divisor
+          }
+        }
+      },
+      mutations: {
+        increment: function(state) {
+          ++state.count
+        },
+        decrement: function(state) {
+          --state.count
+        },
+        reset: function(state, payload) {
+          state.count = payload.value
+        }
+      },
+      actions: {
+        incrementAsync: function(context) {
+          setTimeout(function() {
+            context.commit("increment")
+          }, 1000)
+        }
+      }
+    }),
+    data: {
+      value: 0
+    },
+    computed: {
+      count: function() {
+        return this.$store.state.count
+      },
+      squareCount: function() {
+        return this.$store.getters.squareCount
+      },
+      doubleSquareCount: function() {
+        return this.$store.getters.doubleSquareCount
+      }
+    },
+    methods: {
+      increment: function() {
+        this.$store.commit("increment")
+      },
+      decrement: function() {
+        this.$store.commit("decrement")
+      },
+      incrementAsync: function() {
+        this.$store.dispatch("incrementAsync")
+      }
+    }
+  })
+</script>

@@ -10,6 +10,12 @@
     <a v-bind:href="item.path">{{ item.title }}</a>
   </li>
 </ol>
+<h1>Hello, Vuex!</h1>
+<ol id="hello-vuex">
+  <li v-for="item in list">
+    <a v-bind:href="item.path">{{ item.title }}</a>
+  </li>
+</ol>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script>
   var hello_vue = new Vue({
@@ -45,6 +51,14 @@
         {title: "Redirect and Alias", path: "./router/redirect_and_alias.html"},
         {title: "Passing Props to Route Components", path: "./router/passing_props_to_route_components.html"},
         {title: "Transitions", path: "./router/transitions.html"}
+      ]
+    }
+  })
+  var hello_vuex = new Vue({
+    el: "#hello-vuex",
+    data: {
+      list: [
+        {title: "Getting Started", path: "./vuex/hello.html"},
       ]
     }
   })
